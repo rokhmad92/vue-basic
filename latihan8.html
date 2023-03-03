@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar VueJs</title>
+    <style>
+        .done {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <p>Todo id: {{ todoId }}</p>
+    <button @click="todoId++">Fetch next todo</button>
+    <p v-if="!todoData">Loading...</p>
+    <pre v-else>{{ todoData }}</pre>
+</div>
+
+
+<!-- Script vue -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+const { createApp } = Vue
+createApp({
+    data() {
+        return {
+            todoId: 1,
+            todoData: null
+            }
+        },
+        methods: {
+            async fetchData() {
+            this.todoData = null
+            const res = await fetch(
+                `https://jsonplaceholder.typicode.com/todos/${this.todoId}`
+            )
+            this.todoData = await res.json()
+            }
+        },
+        mounted() {
+            this.fetchData()
+        },
+        watch: {
+            todoId() {
+            this.fetchData()
+            }
+        }
+}).mount('#app')
+</script>
+
+</body>
+</html>
